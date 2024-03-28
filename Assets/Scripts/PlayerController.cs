@@ -13,10 +13,7 @@ public class PlayerController : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        if (IsOwner)
-        {
-            gameObject.name += " Self";
-        }
+        gameObject.name += OwnerClientId;
     }
 
     public void Move()
@@ -29,6 +26,13 @@ public class PlayerController : NetworkBehaviour
     {
         var randomPosition = GetRandomPositionOnPlane();
         transform.position = randomPosition;
+    }
+
+    [ClientRpc]
+    void SubmitPositionRequestClientRpc(Vector3 newPos, ServerRpcParams rpcParams = default)
+    {
+        var clientId = rpcParams.Receive.SenderClientId;
+        transform.position = newPos;
     }
 
     static Vector3 GetRandomPositionOnPlane()

@@ -24,20 +24,20 @@ public class PlayerController : NetworkBehaviour
         {
             transform.position = pos;
         }
-        SubmitPositionRequestServerRpc(pos);
+        //SubmitPositionRequestServerRpc(pos);
     }
 
-    [ServerRpc]
-    void SubmitPositionRequestServerRpc(Vector3 pos, ServerRpcParams rpcParams = default)
-    {
-        transform.position = pos;
-    }
+    //[ServerRpc]
+    //void SubmitPositionRequestServerRpc(Vector3 pos, ServerRpcParams rpcParams = default)
+    //{
+    //    transform.position = pos;
+    //}
 
-    [ClientRpc]
-    void SubmitPositionRequestClientRpc(Vector3 newPos, ClientRpcParams rpcParams = default)
-    {
+    //[ClientRpc]
+    //void SubmitPositionRequestClientRpc(Vector3 newPos, ClientRpcParams rpcParams = default)
+    //{
         
-    }
+    //}
 
     static Vector3 GetRandomPositionOnPlane()
     {

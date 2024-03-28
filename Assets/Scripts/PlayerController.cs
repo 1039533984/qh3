@@ -25,14 +25,14 @@ public class PlayerController : NetworkBehaviour
     void SubmitPositionRequestServerRpc(ServerRpcParams rpcParams = default)
     {
         var randomPosition = GetRandomPositionOnPlane();
-        transform.position = randomPosition;
+        //transform.position = randomPosition;
+        SubmitPositionRequestClientRpc(rpcParams.Receive.SenderClientId, randomPosition);
     }
 
     [ClientRpc]
-    void SubmitPositionRequestClientRpc(Vector3 newPos, ServerRpcParams rpcParams = default)
+    void SubmitPositionRequestClientRpc(ulong clientId, Vector3 newPos, ClientRpcParams rpcParams = default)
     {
-        var clientId = rpcParams.Receive.SenderClientId;
-        transform.position = newPos;
+        NetworkManager.Singleton.ConnectedClients[clientId].PlayerObject.transform.position = newPos;
     }
 
     static Vector3 GetRandomPositionOnPlane()

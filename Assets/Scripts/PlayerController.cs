@@ -14,25 +14,29 @@ public class PlayerController : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         gameObject.name += OwnerClientId;
+        Move();
     }
 
     public void Move()
     {
-        SubmitPositionRequestServerRpc();
+        var pos = GetRandomPositionOnPlane();
+        if (!IsServer)
+        {
+            transform.position = pos;
+        }
+        SubmitPositionRequestServerRpc(pos);
     }
 
     [ServerRpc]
-    void SubmitPositionRequestServerRpc(ServerRpcParams rpcParams = default)
+    void SubmitPositionRequestServerRpc(Vector3 pos, ServerRpcParams rpcParams = default)
     {
-        var randomPosition = GetRandomPositionOnPlane();
-        //transform.position = randomPosition;
-        SubmitPositionRequestClientRpc(rpcParams.Receive.SenderClientId, randomPosition);
+        transform.position = pos;
     }
 
     [ClientRpc]
-    void SubmitPositionRequestClientRpc(ulong clientId, Vector3 newPos, ClientRpcParams rpcParams = default)
+    void SubmitPositionRequestClientRpc(Vector3 newPos, ClientRpcParams rpcParams = default)
     {
-        NetworkManager.Singleton.ConnectedClients[clientId].PlayerObject.transform.position = newPos;
+        
     }
 
     static Vector3 GetRandomPositionOnPlane()

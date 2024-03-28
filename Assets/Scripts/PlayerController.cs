@@ -15,7 +15,7 @@ public class PlayerController : NetworkBehaviour
     {
         if (IsOwner)
         {
-            Move();
+            gameObject.name += " Self";
         }
     }
 

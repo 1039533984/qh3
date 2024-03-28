@@ -1,2 +1,6 @@
 Temp/
 UserSettings/
+.vsconfig
+*.csproj
+*.sln
+.vs/

@@ -14,7 +14,10 @@ public class PlayerController : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         gameObject.name += OwnerClientId;
-        Move();
+        if (IsOwner)
+        {
+            Move();
+        }
     }
 
     public void Move()
@@ -32,10 +35,6 @@ public class PlayerController : NetworkBehaviour
     [ClientRpc]
     void SubmitPositionRequestClientRpc(Vector3 newPos, ClientRpcParams rpcParams = default)
     {
-        if (IsOwner)
-        {
-            return;
-        }
         transform.position = newPos;
     }
 

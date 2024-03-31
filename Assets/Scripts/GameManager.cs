@@ -4,11 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 
 public class GameManager : MonoBehaviour
 {
+    public GameObject TestPrefab;
 
     void OnGUI()
     {
@@ -16,7 +19,6 @@ public class GameManager : MonoBehaviour
         if (!NetworkManager.Singleton.IsClient && !NetworkManager.Singleton.IsServer)
         {
             StartButtons();
-
         }
         else
         {
@@ -28,21 +30,21 @@ public class GameManager : MonoBehaviour
         GUILayout.EndArea();
     }
 
-    static void StartButtons()
+    void StartButtons()
     {
         if (GUILayout.Button("Host")) NetworkManager.Singleton.StartHost();
         if (GUILayout.Button("Client")) NetworkManager.Singleton.StartClient();
         if (GUILayout.Button("Server")) NetworkManager.Singleton.StartServer();
     }
 
-    static void StatusLabels()
+    void StatusLabels()
     {
         var mode = NetworkManager.Singleton.IsHost ?
             "Host" : NetworkManager.Singleton.IsServer ? "Server" : "Client";
         GUILayout.Label("Mode: " + mode);
     }
 
-    static void SubmitNewPosition()
+    void SubmitNewPosition()
     {
         if (GUILayout.Button(NetworkManager.Singleton.IsServer ? "Move" : "Request Position Change"))
         {
@@ -58,6 +60,19 @@ public class GameManager : MonoBehaviour
                 player.Move();
             }
         }
+        if (NetworkManager.Singleton.IsServer)
+        {
+            if (GUILayout.Button("Spawn" ))
+            {
+                var obj = Instantiate(TestPrefab, GetRandomPositionOnPlane(), Quaternion.identity);
+                obj.GetOrAddComponent<NetworkItem>().NetworkObject.Spawn(true);
+            }
+        }
+    }
+
+    Vector3 GetRandomPositionOnPlane()
+    {
+        return new Vector3(Random.Range(-3f, 3f), 1f, UnityEngine.Random.Range(-3f, 3f));
     }
 }
 

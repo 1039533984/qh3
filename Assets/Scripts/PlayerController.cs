@@ -10,7 +10,7 @@ using Random = UnityEngine.Random;
 
 public class PlayerController : NetworkBehaviour
 {
-
+    Vector3 serverPlayerPosition;
     public override void OnNetworkSpawn()
     {
         gameObject.name += OwnerClientId;
@@ -20,24 +20,24 @@ public class PlayerController : NetworkBehaviour
     public void Move()
     {
         var pos = GetRandomPositionOnPlane();
-        if (!IsServer)
-        {
-            transform.position = pos;
-        }
-        //SubmitPositionRequestServerRpc(pos);
+        SubmitPositionRequestServerRpc(pos);
     }
 
-    //[ServerRpc]
-    //void SubmitPositionRequestServerRpc(Vector3 pos, ServerRpcParams rpcParams = default)
-    //{
-    //    transform.position = pos;
-    //}
+    [ServerRpc]
+    void SubmitPositionRequestServerRpc(Vector3 pos, ServerRpcParams rpcParams = default)
+    {
+        SubmitPositionRequestClientRpc(pos);
+    }
 
-    //[ClientRpc]
-    //void SubmitPositionRequestClientRpc(Vector3 newPos, ClientRpcParams rpcParams = default)
-    //{
-        
-    //}
+    [ClientRpc]
+    void SubmitPositionRequestClientRpc(Vector3 newPos, ClientRpcParams rpcParams = default)
+    {
+        if (IsOwner)
+        {
+            return;
+        }
+        transform.position = newPos;
+    }
 
     static Vector3 GetRandomPositionOnPlane()
     {

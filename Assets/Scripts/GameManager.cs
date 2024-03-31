@@ -65,7 +65,8 @@ public class GameManager : MonoBehaviour
             if (GUILayout.Button("Spawn" ))
             {
                 var obj = Instantiate(TestPrefab, GetRandomPositionOnPlane(), Quaternion.identity);
-                obj.GetOrAddComponent<NetworkItem>().NetworkObject.Spawn(true);
+                var item = obj.GetOrAddComponent<NetworkItem>();
+                item.NetworkObject.Spawn(true);
             }
         }
     }
